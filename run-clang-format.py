@@ -249,6 +249,15 @@ def split_list_arg(arg):
     """
     return arg[0].split() if len(arg) == 1 else arg
 
+def str2bool(v):
+    if isinstance(v, bool):
+       return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -300,11 +309,13 @@ def main():
     parser.add_argument(
         '-i',
         '--inplace',
-        type=bool,
+        type=str2bool,
+        nargs='?',
+        const=True,
         default=False,
         help='Just fix files (`clang-format -i`) instead of returning a diff')
-
     args = parser.parse_args()
+    print("args", args)
 
     # use default signal handling, like diff return SIGINT value on ^C
     # https://bugs.python.org/issue14229#msg156446
